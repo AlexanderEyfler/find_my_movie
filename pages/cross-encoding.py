@@ -6,7 +6,6 @@ import faiss
 import requests
 from sentence_transformers import SentenceTransformer
 from tqdm import tqdm
-from st_aggrid import AgGrid, GridOptionsBuilder
 
 # 0. Определяем пути до файлов
 script_path = Path(__file__).resolve()
@@ -52,7 +51,10 @@ index_faiss = create_faiss_index(description_embeddings)
 API_TOKEN = st.secrets["huggingface"]["api_token"]
 cross_encoder_model_name = 'cointegrated/rubert-base-cased-nli-threeway'
 NLI_API_URL = f"https://api-inference.huggingface.co/models/{cross_encoder_model_name}"
-HEADERS = {"Authorization": f"Bearer {API_TOKEN}"}
+HEADERS = {
+    "Authorization": f"Bearer {API_TOKEN}",
+    "x-wait-for-model": "true"
+    }
 
 def query_nli(premise, hypothesis):
     inputs = f"{premise} [SEP] {hypothesis}"
